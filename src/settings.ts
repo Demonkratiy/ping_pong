@@ -2,6 +2,9 @@ export enum Color {
   BLACK = "#000",
   GREEN = "#0f0",
   BLUE = "#00f",
+  RED = "rgb(255, 0, 0)",
+  WHITE = "rgb(255, 255, 255)",
+  GOLD = "rgb(232, 180, 65)",
 }
 
 export enum Events {

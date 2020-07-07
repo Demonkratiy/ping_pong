@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import { Battleground, Paddle, Ball } from "../components";
 import { Context2D } from "../ctx";
-import { KeyCode, Direction } from "../settings";
+import { KeyCode, Direction, Color } from "../settings";
 import {
   VIEWPORT_WIDTH,
   VIEWPORT_HEIGHT,
@@ -26,6 +26,7 @@ export class Game extends Component<unknown, GameState> {
 
   state = {
     ball: {
+      color: Color.RED,
       r: BALL_RADIUS,
       x: VIEWPORT_WIDTH / 2,
       y: VIEWPORT_HEIGHT / 2,
@@ -33,6 +34,7 @@ export class Game extends Component<unknown, GameState> {
       vy: BALL_SPEED,
     },
     paddleTop: {
+      color: Color.BLACK,
       w: PADDLE_WIDTH,
       h: PADDLE_HEIGHT,
       x: (VIEWPORT_WIDTH - PADDLE_WIDTH) / 2,
@@ -41,6 +43,7 @@ export class Game extends Component<unknown, GameState> {
       vy: 0,
     },
     paddleBottom: {
+      color: Color.WHITE,
       w: PADDLE_WIDTH,
       h: PADDLE_HEIGHT,
       x: (VIEWPORT_WIDTH - PADDLE_WIDTH) / 2,
@@ -114,8 +117,8 @@ export class Game extends Component<unknown, GameState> {
     let update = {};
     switch (this.humanMove) {
       case Direction.LEFT:
-        let collideLeft = paddleBottom.x <= 0;
-        if (collideLeft) update = { x: 0, vx: 0 };
+        let collideLeft = paddleBottom.x <= 10;
+        if (collideLeft) update = { x: 10, vx: 0 };
         else update = { x: paddleBottom.x - PADDLE_SPEED, vx: -PADDLE_SPEED };
         break;
       case Direction.RIGHT:

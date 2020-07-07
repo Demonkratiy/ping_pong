@@ -9,8 +9,18 @@ export class Battleground extends PureComponent {
   componentDidUpdate() {
     let ctx = this.context();
 
+    ctx.beginPath();
     ctx.fillStyle = Color.BLACK;
-    ctx.fillRect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+    ctx.strokeStyle = Color.GOLD;
+    ctx.lineWidth = "10";
+
+    ctx.rect(10, 10, VIEWPORT_WIDTH - 20, VIEWPORT_HEIGHT - 20);
+    ctx.stroke();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.rect(10, 10, VIEWPORT_WIDTH - 20, VIEWPORT_HEIGHT / 2 - 20);
+    ctx.fillStyle = Color.WHITE;
+    ctx.fill();
   }
 
   render() {
