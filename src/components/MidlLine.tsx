@@ -3,7 +3,7 @@ import { Context2D } from "../ctx";
 import { VIEWPORT_WIDTH, VIEWPORT_HEIGHT } from "../constants";
 import { Color } from "../settings";
 
-export class Battleground extends PureComponent {
+export class MidlLine extends PureComponent {
   static contextType = Context2D;
 
   componentDidUpdate() {
@@ -11,16 +11,12 @@ export class Battleground extends PureComponent {
     let width = VIEWPORT_WIDTH - 20;
     let height = VIEWPORT_HEIGHT - 20;
     ctx.beginPath();
-    //ctx.strokeStyle = Color.GOLD;
-    ctx.fillStyle = Color.GOLD;
-    //ctx.lineWidth = "10";
-    ctx.fillRect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
-    ctx.fillStyle = Color.WHITE;
-    ctx.fillRect(10, 10, width, height / 2 - 10);
-    ctx.fillStyle = Color.BLACK;
-    ctx.fillRect(10, height / 2 + 10, width, height / 2);
-    //ctx.rect(10, 10, width, height);
-    //ctx.stroke();
+    ctx.strokeStyle = Color.GOLD;
+    ctx.lineWidth = "10";
+
+    ctx.moveTo(10, height / 2);
+    ctx.lineTo(width + 10, height / 2);
+    ctx.stroke();
 
     // ctx.beginPath();
     // ctx.rect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT / 2);
@@ -30,7 +26,7 @@ export class Battleground extends PureComponent {
     // ctx.beginPath();
     // ctx.rect(0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
     // ctx.fillStyle = Color.BLACK;
-    //ctx.fill()
+    //ctx.fill();
   }
 
   render() {

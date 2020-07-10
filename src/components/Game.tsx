@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { Battleground, Paddle, Ball } from "../components";
+import { Battleground, Paddle, Ball, MidlLine } from "../components";
 import { Context2D } from "../ctx";
 import { KeyCode, Direction, Color } from "../settings";
 import {
@@ -117,8 +117,8 @@ export class Game extends Component<unknown, GameState> {
     let update = {};
     switch (this.humanMove) {
       case Direction.LEFT:
-        let collideLeft = paddleBottom.x <= 10;
-        if (collideLeft) update = { x: 10, vx: 0 };
+        let collideLeft = paddleBottom.x <= 0;
+        if (collideLeft) update = { x: 0, vx: 0 };
         else update = { x: paddleBottom.x - PADDLE_SPEED, vx: -PADDLE_SPEED };
         break;
       case Direction.RIGHT:

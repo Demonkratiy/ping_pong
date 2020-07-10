@@ -1,6 +1,7 @@
-import React from "react";
+import React, { createRef } from "react";
 
 class CanvasComponent extends React.Component {
+  canvas = createRef("canvas");
   componentDidMount() {
     this.updateCanvas();
   }
@@ -10,7 +11,7 @@ class CanvasComponent extends React.Component {
     ctx.fillRect(0, 0, 400, 400);
   }
   render() {
-    return <canvas ref="canvas" width={500} height={500} />;
+    return null;
   }
 }
 
@@ -20,12 +21,13 @@ class WCC extends React.Component {
       <>
         <CanvasComponent />
         <CanvasComponent />
+        <canvas ref="canvas" width={500} height={500} />
       </>
     );
   }
 }
 
-class App extends React.Component {
+export class App extends React.Component {
   render() {
     return <WCC />;
   }
