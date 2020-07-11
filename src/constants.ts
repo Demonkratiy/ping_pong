@@ -6,3 +6,5 @@ export const PADDLE_HEIGHT = 15;
 export const PADDLE_SPEED = 5;
 export const BALL_RADIUS = 10;
 export const BALL_SPEED = 5;
+export const MIDLE_LINE = VIEWPORT_HEIGHT / 2 - VIEWPORT_PADDING;
+export const SCORE_SLICER = 100;

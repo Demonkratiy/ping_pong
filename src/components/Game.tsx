@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import { Battleground, Paddle, Ball } from "../components";
+import { Battleground, ScoreGround, Paddle, Ball } from "../components";
 import { Context2D } from "../ctx";
 import { KeyCode, Direction, Color } from "../settings";
 import {
@@ -11,12 +11,16 @@ import {
   BALL_RADIUS,
   BALL_SPEED,
   PADDLE_SPEED,
+  MIDLE_LINE,
+  SCORE_SLICER,
 } from "../constants";
+import "./style.css";
 
 interface GameState {
   ball: Circ;
   paddleTop: Rect;
   paddleBottom: Rect;
+  scoreGround: Rect;
 }
 
 export class Game extends Component<unknown, GameState> {
@@ -51,6 +55,15 @@ export class Game extends Component<unknown, GameState> {
       vx: 0,
       vy: 0,
     },
+    scoreGround: {
+      color: Color.WHITE,
+      w: VIEWPORT_WIDTH - 20,
+      h: MIDLE_LINE,
+      x: 10,
+      y: 10,
+      vx: 0,
+      vy: 0,
+    },
   };
 
   update = () => {
@@ -61,11 +74,14 @@ export class Game extends Component<unknown, GameState> {
   };
 
   updateBall = () => {
-    let { ball, paddleTop, paddleBottom } = this.state;
+    let { ball, paddleTop, paddleBottom, scoreGround } = this.state;
 
-    let offside = ball.y + ball.r >= VIEWPORT_HEIGHT || ball.y - ball.r <= 0;
-    let collideLeft = ball.x - ball.r <= 0;
-    let collideRight = ball.x + ball.r >= VIEWPORT_WIDTH;
+    let offsideTop = ball.y - ball.r <= 0;
+    let offsideBot = ball.y + ball.r >= VIEWPORT_HEIGHT;
+    let offsideLineCross =
+      ball.y + ball.r >= VIEWPORT_HEIGHT - 10 || ball.y - ball.r <= 10;
+    let collideLeft = ball.x - ball.r <= 10;
+    let collideRight = ball.x + ball.r >= VIEWPORT_WIDTH - 10;
     let contactTop =
       ball.x + ball.r >= paddleTop.x &&
       ball.x - ball.r <= paddleTop.x + paddleTop.w &&
@@ -74,22 +90,28 @@ export class Game extends Component<unknown, GameState> {
       ball.x + ball.r >= paddleBottom.x &&
       ball.x - ball.r <= paddleBottom.x + paddleBottom.w &&
       ball.y + ball.r >= paddleBottom.y;
+    let flewDown = ball.y - ball.r >= paddleTop.y + 80;
+    let flewTop = ball.y + ball.r <= paddleBottom.y - 60;
 
     this.setState({
       ball: {
         ...ball,
-        ...(offside && {
+        ...(offsideLineCross && {
+          color: Color.GOLD,
+        }),
+        ...((offsideTop || offsideBot) && {
+          color: Color.RED,
           x: VIEWPORT_WIDTH / 2,
           y: VIEWPORT_HEIGHT / 2,
           vx: 0,
           vy: BALL_SPEED,
         }),
         ...(collideLeft && {
-          x: BALL_RADIUS,
+          x: BALL_RADIUS + 10,
           vx: -ball.vx,
         }),
         ...(collideRight && {
-          x: VIEWPORT_WIDTH - BALL_RADIUS,
+          x: VIEWPORT_WIDTH - BALL_RADIUS - 10,
           vx: -ball.vx,
         }),
         ...(contactBottom && {
@@ -99,6 +121,39 @@ export class Game extends Component<unknown, GameState> {
         ...(contactTop && {
           vx: ball.vx + paddleTop.vx / 2,
           vy: BALL_SPEED,
+        }),
+      },
+      paddleBottom: {
+        ...paddleBottom,
+        ...(contactBottom && {
+          color: Color.HIGLITE_BOT,
+        }),
+        ...(flewTop && {
+          color: Color.WHITE,
+        }),
+      },
+      paddleTop: {
+        ...paddleTop,
+        ...(contactTop && {
+          color: Color.HIGLITE_TOP,
+        }),
+        ...(flewDown && {
+          color: Color.BLACK,
+        }),
+      },
+      scoreGround: {
+        ...scoreGround,
+        ...(offsideTop && {
+          h:
+            scoreGround.h < VIEWPORT_PADDING + SCORE_SLICER
+              ? MIDLE_LINE
+              : scoreGround.h - SCORE_SLICER,
+        }),
+        ...(offsideBot && {
+          h:
+            scoreGround.h > VIEWPORT_HEIGHT - VIEWPORT_PADDING - SCORE_SLICER
+              ? MIDLE_LINE
+              : scoreGround.h + SCORE_SLICER,
         }),
       },
     });
@@ -122,9 +177,10 @@ export class Game extends Component<unknown, GameState> {
         else update = { x: paddleBottom.x - PADDLE_SPEED, vx: -PADDLE_SPEED };
         break;
       case Direction.RIGHT:
-        let collideRight = paddleBottom.x + paddleBottom.w >= VIEWPORT_WIDTH;
+        let collideRight =
+          paddleBottom.x + paddleBottom.w >= VIEWPORT_WIDTH - 10;
         if (collideRight)
-          update = { x: VIEWPORT_WIDTH - paddleBottom.w, vx: 0 };
+          update = { x: VIEWPORT_WIDTH - paddleBottom.w - 10, vx: 0 };
         else update = { x: paddleBottom.x + PADDLE_SPEED, vx: PADDLE_SPEED };
         break;
       case Direction.NONE:
@@ -147,10 +203,16 @@ export class Game extends Component<unknown, GameState> {
     } else if (diff > PADDLE_SPEED) {
       diff = PADDLE_SPEED;
     }
+    let targetPosition = paddleTop.x + diff;
     this.setState({
       paddleTop: {
         ...paddleTop,
-        x: paddleTop.x + diff,
+        x:
+          targetPosition <= 10
+            ? 10
+            : targetPosition + paddleTop.w >= VIEWPORT_WIDTH - 10
+            ? VIEWPORT_WIDTH - paddleTop.w - 10
+            : targetPosition,
       },
     });
   };
@@ -183,7 +245,7 @@ export class Game extends Component<unknown, GameState> {
 
   render() {
     return (
-      <>
+      <div className="gmaeContainer">
         <canvas
           ref={this.ref}
           width={VIEWPORT_WIDTH}
@@ -191,11 +253,12 @@ export class Game extends Component<unknown, GameState> {
         />
         <Context2D.Provider value={() => this.ref.current?.getContext("2d")!}>
           <Battleground />
+          <ScoreGround {...this.state.scoreGround} />
           <Ball {...this.state.ball} />
           <Paddle {...this.state.paddleTop} />
           <Paddle {...this.state.paddleBottom} />
         </Context2D.Provider>
-      </>
+      </div>
     );
   }
 }
