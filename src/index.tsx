@@ -1,4 +1,4 @@
-import "./declarations.d.ts";
+//import "./declarations.d.ts";
 import React from "react";
 import { render } from "react-dom";
 import { Game } from "./components";

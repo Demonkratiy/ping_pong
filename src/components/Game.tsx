@@ -23,6 +23,10 @@ interface GameState {
   scoreGround: Rect;
 }
 
+let VIEWPORT_HEIGHT_INNER = VIEWPORT_HEIGHT - VIEWPORT_PADDING;
+let VIEWPORT_WIDTH_INNER = VIEWPORT_WIDTH - VIEWPORT_PADDING;
+let CENTER_X = VIEWPORT_WIDTH / 2;
+
 export class Game extends Component<unknown, GameState> {
   ref = createRef<HTMLCanvasElement>();
   req: number = null!;
@@ -32,8 +36,8 @@ export class Game extends Component<unknown, GameState> {
     ball: {
       color: Color.RED,
       r: BALL_RADIUS,
-      x: VIEWPORT_WIDTH / 2,
-      y: VIEWPORT_HEIGHT / 2,
+      x: CENTER_X,
+      y: MIDLE_LINE,
       vx: 0,
       vy: BALL_SPEED,
     },
@@ -79,9 +83,9 @@ export class Game extends Component<unknown, GameState> {
     let offsideTop = ball.y - ball.r <= 0;
     let offsideBot = ball.y + ball.r >= VIEWPORT_HEIGHT;
     let offsideLineCross =
-      ball.y + ball.r >= VIEWPORT_HEIGHT - 10 || ball.y - ball.r <= 10;
+      ball.y + ball.r >= VIEWPORT_HEIGHT_INNER || ball.y - ball.r <= 10;
     let collideLeft = ball.x - ball.r <= 10;
-    let collideRight = ball.x + ball.r >= VIEWPORT_WIDTH - 10;
+    let collideRight = ball.x + ball.r >= VIEWPORT_WIDTH_INNER;
     let contactTop =
       ball.x + ball.r >= paddleTop.x &&
       ball.x - ball.r <= paddleTop.x + paddleTop.w &&
@@ -101,8 +105,8 @@ export class Game extends Component<unknown, GameState> {
         }),
         ...((offsideTop || offsideBot) && {
           color: Color.RED,
-          x: VIEWPORT_WIDTH / 2,
-          y: VIEWPORT_HEIGHT / 2,
+          x: CENTER_X,
+          y: MIDLE_LINE,
           vx: 0,
           vy: BALL_SPEED,
         }),
@@ -172,13 +176,13 @@ export class Game extends Component<unknown, GameState> {
     let update = {};
     switch (this.humanMove) {
       case Direction.LEFT:
-        let collideLeft = paddleBottom.x <= 10;
+        let collideLeft = paddleBottom.x <= 20;
         if (collideLeft) update = { x: 10, vx: 0 };
         else update = { x: paddleBottom.x - PADDLE_SPEED, vx: -PADDLE_SPEED };
         break;
       case Direction.RIGHT:
         let collideRight =
-          paddleBottom.x + paddleBottom.w >= VIEWPORT_WIDTH - 10;
+          paddleBottom.x + paddleBottom.w >= VIEWPORT_WIDTH_INNER;
         if (collideRight)
           update = { x: VIEWPORT_WIDTH - paddleBottom.w - 10, vx: 0 };
         else update = { x: paddleBottom.x + PADDLE_SPEED, vx: PADDLE_SPEED };
@@ -210,7 +214,7 @@ export class Game extends Component<unknown, GameState> {
         x:
           targetPosition <= 10
             ? 10
-            : targetPosition + paddleTop.w >= VIEWPORT_WIDTH - 10
+            : targetPosition + paddleTop.w >= VIEWPORT_WIDTH_INNER
             ? VIEWPORT_WIDTH - paddleTop.w - 10
             : targetPosition,
       },
