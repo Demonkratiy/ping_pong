@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/ping_pong/static/css/main.c4022c09.chunk.css",
+    "main.js": "/ping_pong/static/js/main.641ee556.chunk.js",
+    "main.js.map": "/ping_pong/static/js/main.641ee556.chunk.js.map",
+    "runtime-main.js": "/ping_pong/static/js/runtime-main.dcf8f968.js",
+    "runtime-main.js.map": "/ping_pong/static/js/runtime-main.dcf8f968.js.map",
+    "static/js/2.03855407.chunk.js": "/ping_pong/static/js/2.03855407.chunk.js",
+    "static/js/2.03855407.chunk.js.map": "/ping_pong/static/js/2.03855407.chunk.js.map",
+    "index.html": "/ping_pong/index.html",
+    "precache-manifest.fd8c7b413d0f7893727601a3af18f541.js": "/ping_pong/precache-manifest.fd8c7b413d0f7893727601a3af18f541.js",
+    "service-worker.js": "/ping_pong/service-worker.js",
+    "static/css/main.c4022c09.chunk.css.map": "/ping_pong/static/css/main.c4022c09.chunk.css.map",
+    "static/js/2.03855407.chunk.js.LICENSE.txt": "/ping_pong/static/js/2.03855407.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.dcf8f968.js",
+    "static/js/2.03855407.chunk.js",
+    "static/css/main.c4022c09.chunk.css",
+    "static/js/main.641ee556.chunk.js"
+  ]
+}
